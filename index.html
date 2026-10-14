@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pulse Pacers</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        color: #fff;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        background:
+          radial-gradient(circle at 20% 20%, #ff006e55, transparent 35%),
+          radial-gradient(circle at 80% 70%, #00f5d455, transparent 35%),
+          #09090f;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -50%;
+        background: conic-gradient(
+          from 0deg,
+          #ff006e,
+          #8338ec,
+          #00f5d4,
+          #ffbe0b,
+          #ff006e
+        );
+        filter: blur(100px);
+        opacity: 0.18;
+        animation: spin 12s linear infinite;
+      }
+
+      .card {
+        position: relative;
+        width: min(92vw, 780px);
+        padding: clamp(28px, 6vw, 64px);
+        text-align: center;
+        border: 1px solid #ffffff2e;
+        border-radius: 30px;
+        background: #ffffff0d;
+        box-shadow:
+          0 30px 100px #000a,
+          inset 0 1px #ffffff20;
+        backdrop-filter: blur(22px);
+      }
+
+      .eyebrow {
+        color: #00f5d4;
+        font-size: 0.75rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 14px 0 8px;
+        font:
+          900 clamp(2.8rem, 10vw, 7rem)/0.9 system-ui,
+          sans-serif;
+        letter-spacing: -0.07em;
+        text-transform: uppercase;
+        text-shadow: 0 0 40px #ff006e66;
+      }
+
+      .date {
+        margin-bottom: 34px;
+        color: #ffbe0b;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .countdown {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .unit {
+        padding: 20px 8px;
+        border: 1px solid #ffffff14;
+        border-radius: 18px;
+        background: #00000045;
+      }
+
+      .number {
+        display: block;
+        font:
+          800 clamp(1.8rem, 6vw, 4rem)/1 system-ui,
+          sans-serif;
+        text-shadow: 0 0 30px #ff006e88;
+      }
+
+      .label {
+        display: block;
+        margin-top: 9px;
+        color: #ffffff70;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+      }
+
+      .footer {
+        margin-top: 28px;
+        color: #ffffff70;
+        font-size: 0.8rem;
+      }
+
+      .blink {
+        animation: blink 1s steps(1) infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 0.25;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .countdown {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="eyebrow">Nedräkningen har börjat</div>
+
+      <h1>Pulse Pacers</h1>
+      <div class="date">Tisdag 20 oktober · 18:30</div>
+
+      <div class="countdown" aria-live="polite">
+        <div class="unit">
+          <b class="number" id="days">00</b>
+          <small class="label">DAGAR</small>
+        </div>
+        <div class="unit">
+          <b class="number" id="hours">00</b>
+          <small class="label">TIMMAR</small>
+        </div>
+        <div class="unit">
+          <b class="number" id="minutes">00</b>
+          <small class="label">MINUTER</small>
+        </div>
+        <div class="unit">
+          <b class="number" id="seconds">00</b>
+          <small class="label">SEKUNDER</small>
+        </div>
+      </div>
+
+      <div class="footer">VI SES DÄR <span class="blink">●</span></div>
+    </main>
+
+    <script>
+      const target = new Date(2026, 9, 20, 18, 30);
+      const ids = ["days", "hours", "minutes", "seconds"];
+
+      function tick() {
+        const remaining = Math.max(0, target - new Date());
+        const values = [
+          Math.floor(remaining / 864e5),
+          Math.floor(remaining / 36e5) % 24,
+          Math.floor(remaining / 6e4) % 60,
+          Math.floor(remaining / 1e3) % 60,
+        ];
+
+        values.forEach((value, index) => {
+          document.getElementById(ids[index]).textContent = String(
+            value,
+          ).padStart(2, "0");
+        });
+
+        if (!remaining) {
+          document.querySelector(".eyebrow").textContent = "Det är dags";
+          document.querySelector("h1").textContent = "Nu kör vi!";
+          document.querySelector(".footer").textContent = "PULSE PACERS ✦";
+        }
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    </script>
+  </body>
+</html>
